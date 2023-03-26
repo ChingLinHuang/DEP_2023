@@ -1,0 +1,38 @@
+1 month: 2592000 sec
+
+
+Simulation:
+3 hours per replicate (5 competition, 13 niche width and 16 dispersal ability)
+31200 metacommunities with 60 time-steps
+
+Total:1872000 samples
+
+
+Stegen:
+First step 999 permutation
+6 hour per sample... in R
+3 min per sample in Julia :)
+Second step 999 permutation
+10 sec per sample in Julia
+
+one replicate with 4 time steps
+20000 sec ~ 5 hours
+
+
+DNCI:
+99 perm 100 comm
+16 min per sample
+99 perm 50 comm
+4 min per sample
+
+one replicate with 4 time steps
+9 hours
+
+
+
+20 time steps for each rep
+
+5 time set x 14 hour x 18 rep = 1260 hr / 10
+
+
+

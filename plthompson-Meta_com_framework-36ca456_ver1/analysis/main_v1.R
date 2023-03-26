@@ -1,0 +1,81 @@
+library(adespatial)
+library(tidyverse)
+library(som.nn)
+library(vegan)
+library(purrr)
+
+source("C:\\Users\\andy\\Downloads\\analysis\\variation partitioning\\code\\functions_prepare_VP.R")
+source("C:\\Users\\andy\\Downloads\\analysis\\DNCI\\code\\functions_prepare_DNCI.R")
+
+setwd("C:\\Users\\andy\\Downloads\\analysis\\data")
+
+## results for variation paritioning
+# variables descriptions:
+# E: env
+# S: spatial
+# ES: union of env and spatial
+# E_S: env with no spatial
+# E.S: intersection of env and spatial
+# S_E: spatial with no env
+# resid: residual
+# 
+
+parameter_space <- cross_df(list(m = 1:8, l = 1, j = 1:8, i = 1:6, k = 4, env = 2, rep = 2:9))
+
+res <- data.frame(rep = 0, env = 0, k = 0, i = 0, j = 0,l = 0,m = 0)
+
+iinndd <- 1
+for(ind in 1:200){
+              tryCatch({
+                rep <- parameter_space$rep[ind]
+                env <- parameter_space$env[ind]
+                k <- parameter_space$k[ind]
+                i <- parameter_space$i[ind]
+                j <- parameter_space$j[ind]
+                l <- parameter_space$l[ind]
+                m <- parameter_space$m[ind]
+                
+                print(paste0("ind = ", ind, ", iinndd = ", iinndd))
+                print(paste0("rep = ", rep, ", env = ", env, ", k = ", k, ", i = ", i, ", j = ", j, ", l = ", l, ", m = ", m))
+                res[iinndd, 1:7] <- c(rep, env, k, i, j, l, m)
+                
+                setwd("C:\\Users\\andy\\Downloads\\analysis\\data")
+                ## load data
+                # species composition # dat_spe
+                load(paste0(".\\spe\\spe_rep", rep, "env", env, "k", k, "i", i, "j", j, "l", l, "m", m, ".rdata"))
+                # environment # dat_env
+                load(paste0(".\\env\\env_rep", rep, "env", env, "k", k, "i", i, "j", j, "l", l, "m", m, ".rdata"))
+                # trait # dat_trait
+                load(paste0(".\\trait\\trait_rep", rep, "env", env, "k", k, "i", i, "j", j, "l", l, "m", m, ".rdata"))
+                # distance matrix # dist.mat
+                load(paste0(".\\dist\\dist_rep", rep, "env", env, "k", k, "i", i, "j", j, "l", l, "m", m, ".rdata"))
+                
+                # filter scenarios with low number of occurrences, abundance or richness
+                if(sum(dat_spe > 0) < 200 | sum(dat_spe) < 1000 | ncol(dat_spe) < 3) next
+                
+                
+                # variation partitioning
+                res.VP1 <- VP(spe = dat_spe, env = dat_env, dist.mat = dist.mat)
+                res$VP[iinndd] <- res.VP1
+                print(paste0("rep = ", rep, ", VP did"))
+                
+                
+                # DNCI
+                res.DNCI <- DNCI(spe = dat_spe)
+                res$DNCI[iinndd] <- res.DNCI
+                print(paste0("rep = ", rep, ", DNCI did"))
+                
+                
+                iinndd <- iinndd + 1
+              }, error=function(e){print(e)})
+}
+
+
+colnames(res[1:7]) <- c("rep", "env", "k", "i", "j", "l", "m")
+
+setwd("C:\\Users\\andy\\Downloads\\analysis\\data")
+save(res, file = "res_1.rdata")
+
+
+
+
