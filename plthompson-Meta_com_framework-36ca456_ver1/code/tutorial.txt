@@ -2,10 +2,7 @@
 
 ## Description
 - framework_model_v4.jl
-Simulate 30 replicates of different metacommunity with different strength of ecological processes. Every replicate has independently generated environment values, landscape configuration, and species trait values.
-
-- framework_model_v4_replicates.jl
-Simulate 30 replicates of different metacommunity with different strength of ecological processes. Every replicate has the same environment values, landscape configuration, and species trait values.
+Simulate 30 replicates of different metacommunities with different strengths of ecological processes. Every replicate has independently generated environment values, landscape configuration, and species trait values.
 
 - generate_landscapes_v2.R
 Generate landscape configuration
