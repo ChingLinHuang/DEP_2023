@@ -12,6 +12,8 @@ tb <- summary_statistics %>%
   mutate(name = c("Min", "Max", "Mean", "Sd"))
 
 tb <- tb[ ,c(5:8,1:4,9:11)]
+colnames(tb)[9] <- "value"
+
 tg <- tb %>% gt(rowname_col = "name") %>%
   tab_spanner(
     label = "VP",
@@ -20,6 +22,10 @@ tg <- tb %>% gt(rowname_col = "name") %>%
   tab_spanner(
     label = "Stegen",
     columns = c(Selection, DispLimit, HomoDisp, Drift)
+  )%>% 
+  tab_spanner(
+    label = "DNCI",
+    columns = c(value, sd.DNCI)
   )
 
 tg
@@ -40,7 +46,8 @@ setwd("C:\\Users\\andy\\Downloads\\analysis\\tables")
 #####
 tb <- t(round(RF_t4_all$importance, digits = 4))
 tb[ ,1] <- round(tb[ ,1], digits = 2)
-colnames(tb) <- c("Competition", "Dispersal", "Niche")
+tb <- tb[ ,c(3,1,2)]
+colnames(tb) <- c("Niche width", "Competition type", "Dispersal ability")
 name <- paste0(rep(c("Selection", "DispLimit", "HomoDisp", "Drift", "Env", "EnvSpatial", "Spatial", "Resid", "DNCI", "sd.DNCI"), each = 4), rep(c(20, 16, 12, 8), 10))
 tg <- tb %>% 
   as_tibble %>% 
@@ -89,6 +96,11 @@ gtsave(tg, file = "importance_t4_all.png", expand = 20)
 # # 
 setwd("C:\\Users\\andy\\Downloads\\analysis\\res\\RF")
 load("table_performance.rdata")
+
+tb$`Dispersal ability` <- str_sub(tb$`Dispersal ability`, 1, -2) # remove "%"
+tb$`Abiotic response` <- str_sub(tb$`Abiotic response`, 1, -2)
+tb$`Biotic response` <- str_sub(tb$`Biotic response`, 1, -2)
+
 colnames(tb)[1:3] <- c("Dispersal ability", "Niche width", "Competition type")
 tb_1 <- data.frame(Stegen = c("O","O","O","X","X","X","X","X","X","O","O","O"), 
                    VP = c("X","X","X","O","O","O","X","X","X","O","O","O"), 
@@ -108,8 +120,8 @@ tg <- tb %>% gt() %>%
     columns = c(VP, Stegen, DNCI, Snapshots)
   ) %>%
   tab_spanner(
-    label = "Performance of prediction",
-    columns = c(`Dispersal ability`, `Niche width`, `Competition type`)
+    label = "Performance of prediction (%)",
+    columns = c(`Niche width`, `Competition type`, `Dispersal ability`)
   )
 tg
 setwd("C:\\Users\\andy\\Downloads\\analysis\\tables")
@@ -139,3 +151,25 @@ tg
 setwd("C:\\Users\\andy\\Downloads\\analysis\\tables")
 gtsave(tg, "Empirical_statistics.png")
 gtsave(tg, "Empirical_statistics.tex")
+
+#####
+##### parameters table
+#####
+niche_width <- exp(seq(from = log(0.001), to = log(10), length.out = 13)) %>%
+  formatC(format = "e", digits = 4) %>%  
+  c(., rep(NA, 2))
+disp_ability <- exp(seq(from = log(1e-5), to = log(1), length.out = 16)) %>%
+  formatC(format = "e", digits = 4) 
+disp_ability <- disp_ability[-16]
+
+tb <- data.frame(Level = 1:15, niche_width, disp_ability)
+colnames(tb)[2:3] <- c("Niche width", "Dispersal ability")  
+
+tg <- tb %>% 
+  as.tibble() %>%
+  gt() 
+tg  
+
+setwd("C:\\Users\\andy\\Downloads\\analysis\\tables")
+gtsave(tg, "Parameters_table.png")
+gtsave(tg, "Parameters_table.tex")

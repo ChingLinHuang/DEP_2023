@@ -46,16 +46,45 @@ setwd("C:\\Users\\andy\\Downloads\\analysis\\res\\RF")
 load("dat.rdata")
 nrow(dat) # remained 5150 samples
 dat %>% select(k, i, j) %>% unique() %>% nrow() # remained 349 scenarios
+dat %>% select(k) %>% table() # remained scenarios/replicates in each competition types 
 
 ## range of the statistics
 summary_statistics <- dat %>% 
   left_join(dat_raw) %>% 
   select(Selection, DispLimit, HomoDisp, Drift, Env, EnvSpatial = `Env and Spatial`, Spatial, Resid, DNCI, CI.DNCI) %>% 
   mutate(DNCI = as.numeric(DNCI), CI.DNCI = as.numeric(CI.DNCI)) %>%
+  mutate(sd.DNCI = CI.DNCI/2) %>%
+  select(-CI.DNCI) %>%
   apply(2, function(x) c(range(x), mean(x), sd(x)))
 row.names(summary_statistics) <- c("Min", "Max", "Mean", "Sd")
 #save(summary_statistics, file = "C:\\Users\\andy\\Downloads\\analysis\\tables\\summary_statistics.rdata")
 
+
+## range of the statistics -- plotting
+summary_statistics <- dat %>% 
+  left_join(dat_raw) %>% 
+  select(Selection, DispLimit, HomoDisp, Drift, Env, EnvSpatial = `Env and Spatial`, Spatial, Resid, DNCI, CI.DNCI) %>% 
+  mutate(DNCI = as.numeric(DNCI), CI.DNCI = as.numeric(CI.DNCI)) %>%
+  mutate(sd.DNCI = CI.DNCI/2) %>%
+  select(-CI.DNCI)
+
+load("C:\\Users\\andy\\Downloads\\analysis\\empirical\\Fushan\\res\\res.rdata")
+res <- res[ ,-1]
+res[ ,10] <- res[ ,10]/2
+colnames(res)[10] <- "sd.DNCI"
+
+NAME <- colnames(res)
+
+windows()
+par(mfrow = c(3,4))
+for(i in 1:10){
+  hist(summary_statistics[ ,i], ann = F, cex.axis = 1.5)
+  abline(v = res[1:4,i], lty = 2)
+  title(title = NULL, xlab = NAME[i], cex.lab = 2)
+}
+plot(1:10, ann = F, axe = F, type = "n")
+plot(1:10, ann = F, axe = F, type = "n")
+# save as "distribution_statistics.pdf"
 ## 
 
 #####

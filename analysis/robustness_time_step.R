@@ -150,8 +150,9 @@ sd(Accuracy$j) # 0.0002927
 sd(Accuracy$k) # 0.0002840
 
 colnames(Accuracy) <- c("Dispersal", "Niche width", "Competition")
+Accuracy <- Accuracy[, c(2,3,1)]
 Accuracy %>%
-  gather(key = "Process", value = "Accuracy", Dispersal:Competition) %>%
+  gather(key = "Process", value = "Accuracy", `Niche width`:Dispersal) %>%
   ggplot(aes(x = Process, y = Accuracy)) + 
   geom_boxplot() +
   theme(legend.text = element_text(size = 12),

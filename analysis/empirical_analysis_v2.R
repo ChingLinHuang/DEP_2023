@@ -1,14 +1,11 @@
-##
-##
-
 library(tidyverse)
 library(ordinalForest)
 library(randomForest)
 
+### Load functions for calculating VP and DNCI
 source("C:\\Users\\andy\\Downloads\\analysis\\variation partitioning\\code\\functions_prepare_VP.R")
 source("C:\\Users\\andy\\Downloads\\analysis\\DNCI\\code\\functions_prepare_DNCI.R")
 
-c("Env", "Env and Spatial", "Spatial", "Resid")
 res <- data.frame(Time = 1:4, Env = 0, EnvSpatial = 0, Spatial = 0, Resid = 0, DNCI = 0, CI.DNCI = 0)
 
 setwd("C:\\Users\\andy\\Downloads\\analysis\\empirical\\Fushan\\data")

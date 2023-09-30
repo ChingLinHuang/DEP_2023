@@ -1,0 +1,19 @@
+### Tutorial ###
+
+## Description
+- framework_model_v4.jl
+Simulate 30 replicates of different metacommunity with different strength of ecological processes. Every replicate has independently generated environment values, landscape configuration, and species trait values.
+
+- framework_model_v4_replicates.jl
+Simulate 30 replicates of different metacommunity with different strength of ecological processes. Every replicate has the same environment values, landscape configuration, and species trait values.
+
+- generate_landscapes_v2.R
+Generate landscape configuration
+
+- model_functions_v1.R
+Functions for generating landscape configuration
+
+## Steps
+1. Run model_functions_v1.R to load the functions
+2. Run generate_landscapes_v2.R to generate landscape configuration for the simulation
+3. Run framework_model_v4.jl and framework_model_v4_replicates.jl to generate simulated data

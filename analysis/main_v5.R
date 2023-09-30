@@ -4,6 +4,7 @@ library(som.nn)
 library(vegan)
 library(purrr)
 
+### Load functions for calculating VP and DNCI
 source("C:\\Users\\andy\\Downloads\\analysis\\variation partitioning\\code\\functions_prepare_VP.R")
 source("C:\\Users\\andy\\Downloads\\analysis\\DNCI\\code\\functions_prepare_DNCI.R")
 
@@ -18,9 +19,11 @@ setwd("C:\\Users\\andy\\Downloads\\analysis\\data")
 # E.S: intersection of env and spatial
 # S_E: spatial with no env
 # resid: residual
-# 
-for (rep in 1:6){
-  parameter_space <- cross_df(list(j = 1:13, i = 1:15, k = 1:5, rep = rep, t = c(41, 42, 43, 44))) %>% as.data.frame
+
+
+### Calculating VP and DNCI
+for (rep in 1:18){
+  parameter_space <- cross_df(list(j = 1:13, i = 1:15, k = 1:5, rep = rep, t = 41:60)) %>% as.data.frame
   
   res <- data.frame(rep = 0, t = 0, k = 0, i = 0, j = 0)
   
@@ -79,7 +82,8 @@ for (rep in 1:6){
 
 
 
-# load data
+### Transform list to dataframe
+# We use parallel calculation and combine the results afterward
 setwd("C:\\Users\\andy\\Downloads\\analysis\\res\\raw")
 dat <- data.frame()
 for (rep in 1:18){
@@ -116,7 +120,7 @@ setwd("C:\\Users\\andy\\Downloads\\analysis\\res\\DNCI")
 save(dat_DNCI, file = "res_DNCI.rdata")
 
 
-# load data
+# Load results of Stegen
 setwd("C:\\Users\\andy\\Downloads\\analysis\\res\\raw")
 dat <- data.frame()
 for (i in 13:18){

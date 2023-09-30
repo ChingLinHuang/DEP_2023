@@ -101,7 +101,8 @@ save(dat_pred, Accuracy, file = ".//robust//robustness_sampling_effort.rdata")
 setwd("C:\\Users\\andy\\Downloads\\analysis\\")
 load(".\\res\\robust\\robustness_sampling_effort.rdata")
 Accuracy$effort <- Accuracy$effort * 10
-colnames(Accuracy)[2:4] <- c("Dispersal", "Abiotic", "Biotic")
+colnames(Accuracy)[2:4] <- c("Dispersal ability", "Niche width", "Competition")
+Accuracy <- Accuracy[ ,c(1,3,4,2)]
 Accuracy %>% 
   gather(key = "parameter", value = "Accuracy", -effort) %>%
   ggplot(aes(x = effort, y = Accuracy, color = parameter)) +
