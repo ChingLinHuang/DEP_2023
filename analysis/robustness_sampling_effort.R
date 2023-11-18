@@ -103,10 +103,17 @@ load(".\\res\\robust\\robustness_sampling_effort.rdata")
 Accuracy$effort <- Accuracy$effort * 10
 colnames(Accuracy)[2:4] <- c("Dispersal ability", "Niche width", "Competition")
 Accuracy <- Accuracy[ ,c(1,3,4,2)]
-Accuracy %>% 
-  gather(key = "parameter", value = "Accuracy", -effort) %>%
-  ggplot(aes(x = effort, y = Accuracy, color = parameter)) +
-  geom_line() +
+Accuracy_1 <- Accuracy %>% 
+  gather(key = "Parameter", value = "Accuracy", -effort)
+Accuracy_1$Parameter <- factor(Accuracy_1$Parameter, c("Niche width", "Competition", "Dispersal ability"))
+Accuracy_1 %>%
+  ggplot(aes(x = effort, y = Accuracy, color = Parameter)) +
+  geom_line(aes(linetype = Parameter), size = 1.2) +
+  theme(legend.position = c(.95, .4),
+        legend.justification = c("right", "top"),
+        legend.box.just = "right",
+        legend.margin = margin(6, 6, 6, 6),
+        legend.key.size = unit(1, 'cm')) +
   xlab("Subsampling size")
 ggsave(file = ".\\figures\\Robustness_sampling_effort_Accuracy.pdf", width = 15, height = 15, units = "cm")
 ggsave(file = ".\\figures\\Robustness_sampling_effort_Accuracy.jpg", width = 15, height = 15, units = "cm")

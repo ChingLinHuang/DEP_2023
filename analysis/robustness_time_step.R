@@ -149,17 +149,19 @@ sd(Accuracy$i) # 0.0002932
 sd(Accuracy$j) # 0.0002927
 sd(Accuracy$k) # 0.0002840
 
-colnames(Accuracy) <- c("Dispersal", "Niche width", "Competition")
+colnames(Accuracy) <- c("Dispersal ability", "Niche width", "Competition")
 Accuracy <- Accuracy[, c(2,3,1)]
-Accuracy %>%
-  gather(key = "Process", value = "Accuracy", `Niche width`:Dispersal) %>%
-  ggplot(aes(x = Process, y = Accuracy)) + 
+Accuracy_1 <- Accuracy %>% gather(key = "parameter", value = "accuracy")
+Accuracy_1$parameter <- factor(Accuracy_1$parameter, c("Niche width", "Competition", "Dispersal ability"))
+Accuracy_1 %>%
+  ggplot(aes(x = parameter, y = accuracy)) + 
   geom_boxplot() +
   theme(legend.text = element_text(size = 12),
         axis.title = element_text(size = 12),
-        axis.text = element_text(size = 12))
-ggsave(file = ".\\figures\\Robustness_time_step_Accuracy_distribution.pdf", width = 15, height = 15, units = "cm")
-ggsave(file = ".\\figures\\Robustness_time_step_Accuracy_distribution.jpg", width = 15, height = 15, units = "cm")
+        axis.text = element_text(size = 12),
+        axis.title.x = element_blank())
+ggsave(file = ".\\figures\\Robustness_time_step_Accuracy_distribution.pdf", width = 12, height = 15, units = "cm")
+ggsave(file = ".\\figures\\Robustness_time_step_Accuracy_distribution.jpg", width = 12, height = 15, units = "cm")
 
 # # prediction error
 # # boxplot
